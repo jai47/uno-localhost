@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="description" content="Play UNO with friends over your local WiFi network! A beautiful real-time multiplayer card game.">
+  <title>UNO — Local Multiplayer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Outfit:wght@700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎴</text></svg>">
+</head>
+<body>
+
+  <!-- ═══════════════ JOIN / CREATE SCREEN ═══════════════ -->
+  <div id="screen-join" class="screen active">
+    <div class="join-container">
+      <div class="logo-area">
+        <h1 class="uno-logo" id="uno-logo">UNO</h1>
+        <p class="tagline">Local Multiplayer</p>
+      </div>
+      <div class="glass-card" id="join-card">
+        <input type="text" id="player-name" placeholder="Your Name" maxlength="12" autocomplete="off" spellcheck="false">
+        <div class="button-group">
+          <button id="btn-create" class="btn btn-primary">Create Room</button>
+          <div class="divider"><span>or join a room</span></div>
+          <div class="join-row">
+            <input type="text" id="room-code-input" placeholder="CODE" maxlength="4" autocomplete="off" spellcheck="false">
+            <button id="btn-join" class="btn btn-secondary">Join</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- floating ambient cards -->
+    <div class="ambient-cards" aria-hidden="true">
+      <div class="ambient-card ac-1"></div>
+      <div class="ambient-card ac-2"></div>
+      <div class="ambient-card ac-3"></div>
+      <div class="ambient-card ac-4"></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ LOBBY SCREEN ═══════════════ -->
+  <div id="screen-lobby" class="screen">
+    <div class="lobby-container">
+      <div class="glass-card lobby-card">
+        <p class="lobby-label">Room Code</p>
+        <h2 class="room-code-display" id="lobby-code"></h2>
+        <p class="lobby-subtitle">Share this code with friends on the same WiFi</p>
+
+        <div id="player-list" class="player-list"></div>
+
+        <div id="lobby-scoreboard" class="scoreboard lobby-scoreboard" style="display:none">
+          <p class="scoreboard-heading">Room Standings</p>
+          <div id="lobby-scoreboard-list" class="scoreboard-list"></div>
+        </div>
+
+        <div class="lobby-actions" id="lobby-actions" style="display:none">
+          <button id="btn-add-bot" class="btn btn-bot">
+            <span class="bot-icon">🤖</span> Add Bot
+          </button>
+          <button id="btn-start" class="btn btn-primary btn-glow">
+            Start Game
+          </button>
+        </div>
+        <p id="lobby-status" class="lobby-status">Waiting for the host to start…</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ GAME SCREEN ═══════════════ -->
+  <div id="screen-game" class="screen">
+    <div class="game-board" id="game-board">
+      <!-- Settings gear (host only) -->
+      <button id="btn-settings" class="btn-settings" style="display:none" title="Settings">⚙</button>
+
+      <!-- Settings panel -->
+      <div id="settings-panel" class="settings-panel" style="display:none">
+        <div class="glass-card settings-card">
+          <h3 class="settings-title">Room Settings</h3>
+          <div class="setting-row">
+            <span class="setting-label">Card Suggestions</span>
+            <label class="toggle-switch">
+              <input type="checkbox" id="toggle-suggestions" checked>
+              <span class="toggle-track"></span>
+            </label>
+          </div>
+          <button class="btn btn-secondary btn-close-settings" id="btn-close-settings">Close</button>
+        </div>
+      </div>
+
+      <!-- Floating reactions (behind cards) -->
+      <div id="reaction-layer" class="reaction-layer" aria-hidden="true"></div>
+
+      <!-- In-game scoreboard chip -->
+      <div id="game-scoreboard" class="game-scoreboard" style="display:none" title="Room standings">
+        <div class="game-scoreboard-label">Wins</div>
+        <div id="game-scoreboard-list" class="game-scoreboard-list"></div>
+      </div>
+
+      <!-- Top: opponents -->
+      <div id="opponents" class="opponents"></div>
+
+      <!-- Center: piles + info -->
+      <div class="center-area">
+        <div class="pile-area">
+          <div id="draw-pile" class="card-pile draw-pile" role="button" tabindex="0" aria-label="Draw a card">
+            <div class="card card-back"><span class="card-back-logo">UNO</span></div>
+            <span class="pile-label">DRAW</span>
+          </div>
+
+          <div class="discard-area">
+            <div id="discard-pile" class="card-pile discard-pile"></div>
+            <div id="current-color" class="current-color-indicator" title="Current color"></div>
+          </div>
+        </div>
+
+        <div id="game-message" class="game-message"></div>
+        <div id="direction-indicator" class="direction-indicator">↻</div>
+      </div>
+
+      <!-- UNO button -->
+      <button id="btn-uno" class="btn-uno" style="display:none">UNO!</button>
+
+      <!-- Catch area -->
+      <div id="catch-area" class="catch-area"></div>
+
+      <!-- Reaction bar -->
+      <div id="reaction-bar" class="reaction-bar">
+        <button class="reaction-btn" data-emoji="😂" title="Laugh">😂</button>
+        <button class="reaction-btn" data-emoji="😡" title="Angry">😡</button>
+        <button class="reaction-btn" data-emoji="😢" title="Sad">😢</button>
+        <button class="reaction-btn" data-emoji="🤬" title="Abuse">🤬</button>
+      </div>
+
+      <!-- Bottom: player hand -->
+      <div class="hand-area">
+        <div id="my-hand" class="my-hand"></div>
+      </div>
+
+      <!-- Turn banner -->
+      <div id="turn-indicator" class="turn-indicator"></div>
+    </div>
+
+    <!-- Color picker modal -->
+    <div id="color-picker" class="color-picker-overlay" style="display:none">
+      <div class="color-picker-modal glass-card">
+        <h3>Choose a Color</h3>
+        <div class="color-options">
+          <button class="color-btn color-red"    data-color="red"    aria-label="Red"></button>
+          <button class="color-btn color-yellow" data-color="yellow" aria-label="Yellow"></button>
+          <button class="color-btn color-green"  data-color="green"  aria-label="Green"></button>
+          <button class="color-btn color-blue"   data-color="blue"   aria-label="Blue"></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ GAME OVER SCREEN ═══════════════ -->
+  <div id="screen-gameover" class="screen">
+    <div class="gameover-container">
+      <div class="glass-card gameover-card">
+        <div class="confetti" aria-hidden="true" id="confetti"></div>
+        <div class="trophy">🏆</div>
+        <h2 id="winner-name" class="winner-name"></h2>
+        <p class="winner-subtitle">wins the game!</p>
+
+        <div class="scoreboard gameover-scoreboard">
+          <p class="scoreboard-heading">Room Standings <span id="games-played-label" class="games-played"></span></p>
+          <div id="gameover-scoreboard-list" class="scoreboard-list"></div>
+        </div>
+
+        <div class="gameover-buttons">
+          <button id="btn-play-again" class="btn btn-primary btn-glow">Play Again</button>
+          <button id="btn-back-lobby" class="btn btn-secondary">Back to Menu</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
