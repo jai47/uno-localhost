@@ -6,7 +6,7 @@ const os = require('os');
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, { cors: { origin: '*' } });
-const PORT = 6969;
+const PORT = 8080;
 
 app.use(express.static('public'));
 
