@@ -5,10 +5,23 @@ const os = require('os');
 
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server, { cors: { origin: '*' } });
-const PORT = 8080;
+const io = new Server(server, {
+  cors: { origin: '*' },
+  // Latency optimizations for real-time multiplayer
+  pingInterval: 10000,       // Heartbeat every 10s (default 25s)
+  pingTimeout: 5000,         // Timeout after 5s (default 20s)
+  perMessageDeflate: false,  // Disable compression for lower latency
+  httpCompression: false,    // Disable HTTP compression on WS
+  transports: ['websocket', 'polling'],  // Prefer WebSocket
+  allowUpgrades: true,
+});
+const PORT = process.env.PORT || 6969;
 
-app.use(express.static('public'));
+app.use(express.static('public', {
+  maxAge: '1h',           // Cache static assets for 1 hour
+  etag: true,
+  lastModified: true,
+}));
 
 // ============================================================
 //  CONSTANTS
@@ -286,7 +299,7 @@ function botEmitReaction(room, botPlayer, emoji) {
   const delay = 300 + Math.random() * 800;
   setTimeout(() => {
     if (!rooms.has(room.code)) return; // room may have been cleaned up
-    io.to(room.code).emit('reaction', { emoji, playerName: botPlayer.name });
+    io.to(room.code).volatile.emit('reaction', { emoji, playerName: botPlayer.name });
   }, delay);
 }
 
@@ -753,7 +766,7 @@ io.on('connection', (socket) => {
     reactionCooldowns.set(socket.id, now);
 
     const player = room.players[playerIndex(room, socket.id)];
-    io.to(roomCode).emit('reaction', { emoji, playerName: player.name });
+    io.to(roomCode).volatile.emit('reaction', { emoji, playerName: player.name });
   });
 
   // ── Add Bot (host only) ─────────────────────────────────
