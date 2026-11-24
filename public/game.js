@@ -1211,9 +1211,16 @@ function initPomodoro() {
             setTimeout(() => onPomodoroComplete(), 300);
           }
         } else if (!parsed.isRunning && parsed.mode === 'focus') {
-          // Was paused during focus — restore remaining time
-          state.pomodoro.isRunning = false;
-          state.pomodoro.remainingSeconds = parsed.remainingSeconds || state.pomodoro.totalSeconds;
+          // If remainingSeconds was less than totalSeconds, it was paused mid-session
+          if (parsed.remainingSeconds && parsed.remainingSeconds < state.pomodoro.totalSeconds && parsed.remainingSeconds > 0) {
+            state.pomodoro.isRunning = false;
+            state.pomodoro.remainingSeconds = parsed.remainingSeconds;
+          } else {
+            // Not in an active session (e.g. was reset) -> keep unlocked
+            state.pomodoro.active = false;
+            state.pomodoro.isRunning = false;
+            state.pomodoro.remainingSeconds = state.pomodoro.totalSeconds;
+          }
         } else if (parsed.mode === 'break') {
           // Break mode — game is unlocked, just restore UI state
           state.pomodoro.isRunning = false;
@@ -1345,7 +1352,8 @@ function updatePomodoroUI() {
 
 function isPomodoroLocked() {
   const p = state.pomodoro;
-  return Boolean(p && p.active && p.mode === 'focus');
+  // Game is locked ONLY if Pomodoro is active, in focus mode, AND actively in-session (running or paused mid-session)
+  return Boolean(p && p.active && p.mode === 'focus' && (p.isRunning || p.remainingSeconds < p.totalSeconds));
 }
 
 function updateJoinLockUI() {
@@ -1376,12 +1384,7 @@ function cancelPomodoroSession() {
   if (!confirm('End your study session early? No reward matches will be earned.')) {
     return;
   }
-  resetPomodoro();
-  p.active = false;
-  savePomodoroState();
-  updatePomodoroUI();
-  updateJoinLockUI();
-  toast('Study session ended. Game unlocked! 🔓');
+  resetPomodoro(true);
 }
 
 function togglePomodoroTimer() {
@@ -1460,137 +1463,144 @@ function onPomodoroComplete() {
   updatePomodoroUI();
 }
 
-function resetPomodoro() {
-  sound.buttonClick();
-  const p = state.pomodoro;
-  clearInterval(p.timerHandle);
-  p.timerHandle = null;
-  p.isRunning = false;
-  p.mode = 'focus';
-  p.totalSeconds = p.durationMinutes * 60;
-  p.remainingSeconds = p.totalSeconds;
-  p.targetEndTime = null;
-  savePomodoroState();
-  updatePomodoroUI();
-}
-
-function openPomodoroModal() {
-  sound.buttonClick();
-  if (el.pomodoroModal) {
-    el.pomodoroModal.style.display = 'flex';
-  }
-  if (el.pomoQuote) {
-    el.pomoQuote.textContent = `"${POMO_QUOTES[Math.floor(Math.random() * POMO_QUOTES.length)]}"`;
-  }
-  updatePomodoroUI();
-}
-
-function closePomodoroModal() {
-  sound.buttonClick();
-  if (el.pomodoroModal) {
-    el.pomodoroModal.style.display = 'none';
-  }
-}
-
-function handlePomodoroGameOver() {
-  const p = state.pomodoro;
-  if (!p.active) {
-    if (el.pomoGameOverBox) el.pomoGameOverBox.style.display = 'none';
-    return;
-  }
-
-  if (p.mode === 'break') {
-    p.rewardGamesPlayed++;
-    if (el.pomoGameOverBox) {
-      el.pomoGameOverBox.style.display = 'block';
-    }
-
-    if (p.rewardGamesPlayed < p.rewardGamesTotal) {
-      if (el.pomoGameOverStatus) {
-        el.pomoGameOverStatus.textContent = `Reward Match ${p.rewardGamesPlayed} of ${p.rewardGamesTotal} finished! 1 match remaining.`;
-      }
-    } else {
-      if (el.pomoGameOverStatus) {
-        el.pomoGameOverStatus.textContent = `All ${p.rewardGamesTotal} reward match${p.rewardGamesTotal > 1 ? 'es' : ''} finished! Time for your next study block 🎯`;
-      }
+  function resetPomodoro(showToast = false) {
+    sound.buttonClick();
+    const p = state.pomodoro;
+    clearInterval(p.timerHandle);
+    p.timerHandle = null;
+    p.active = false;
+    p.isRunning = false;
+    p.mode = 'focus';
+    p.totalSeconds = p.durationMinutes * 60;
+    p.remainingSeconds = p.totalSeconds;
+    p.targetEndTime = null;
+    savePomodoroState();
+    updatePomodoroUI();
+    updateJoinLockUI();
+    if (showToast) {
+      toast('Study timer reset. Game unlocked! 🔓');
     }
   }
-  savePomodoroState();
-  updatePomodoroUI();
-}
 
-function setupPomodoroListeners() {
-  if (el.btnPomodoroToggle) {
-    el.btnPomodoroToggle.addEventListener('click', openPomodoroModal);
+  function openPomodoroModal() {
+    sound.buttonClick();
+    if (el.pomodoroModal) {
+      el.pomodoroModal.style.display = 'flex';
+    }
+    if (el.pomoQuote) {
+      el.pomoQuote.textContent = `"${POMO_QUOTES[Math.floor(Math.random() * POMO_QUOTES.length)]}"`;
+    }
+    updatePomodoroUI();
   }
-  if (el.btnClosePomodoro) {
-    el.btnClosePomodoro.addEventListener('click', closePomodoroModal);
+
+  function closePomodoroModal() {
+    sound.buttonClick();
+    if (el.pomodoroModal) {
+      el.pomodoroModal.style.display = 'none';
+    }
   }
-  if (el.pomodoroMiniPill) {
-    el.pomodoroMiniPill.addEventListener('click', openPomodoroModal);
+
+  function handlePomodoroGameOver() {
+    const p = state.pomodoro;
+    if (!p.active) {
+      if (el.pomoGameOverBox) el.pomoGameOverBox.style.display = 'none';
+      return;
+    }
+
+    if (p.mode === 'break') {
+      p.rewardGamesPlayed++;
+      if (el.pomoGameOverBox) {
+        el.pomoGameOverBox.style.display = 'block';
+      }
+
+      if (p.rewardGamesPlayed < p.rewardGamesTotal) {
+        if (el.pomoGameOverStatus) {
+          el.pomoGameOverStatus.textContent = `Reward Match ${p.rewardGamesPlayed} of ${p.rewardGamesTotal} finished! 1 match remaining.`;
+        }
+      } else {
+        if (el.pomoGameOverStatus) {
+          el.pomoGameOverStatus.textContent = `All ${p.rewardGamesTotal} reward match${p.rewardGamesTotal > 1 ? 'es' : ''} finished! Time for your next study block 🎯`;
+        }
+      }
+    }
+    savePomodoroState();
+    updatePomodoroUI();
   }
-  if (el.btnJoinPomoBanner) {
-    el.btnJoinPomoBanner.addEventListener('click', openPomodoroModal);
-  }
-  if (el.btnPomoStart) {
-    el.btnPomoStart.addEventListener('click', togglePomodoroTimer);
-  }
-  if (el.btnPomoReset) {
-    el.btnPomoReset.addEventListener('click', resetPomodoro);
-  }
-  if (el.btnPomoRestartCycle) {
-    el.btnPomoRestartCycle.addEventListener('click', () => {
-      sound.buttonClick();
-      resetPomodoro();
-      openPomodoroModal();
-      toast('Ready for your next study block! 🎯');
+
+  function setupPomodoroListeners() {
+    if (el.btnPomodoroToggle) {
+      el.btnPomodoroToggle.addEventListener('click', openPomodoroModal);
+    }
+    if (el.btnClosePomodoro) {
+      el.btnClosePomodoro.addEventListener('click', closePomodoroModal);
+    }
+    if (el.pomodoroMiniPill) {
+      el.pomodoroMiniPill.addEventListener('click', openPomodoroModal);
+    }
+    if (el.btnJoinPomoBanner) {
+      el.btnJoinPomoBanner.addEventListener('click', openPomodoroModal);
+    }
+    if (el.btnPomoStart) {
+      el.btnPomoStart.addEventListener('click', togglePomodoroTimer);
+    }
+    if (el.btnPomoReset) {
+      el.btnPomoReset.addEventListener('click', () => {
+        resetPomodoro(true);
+      });
+    }
+    if (el.btnPomoRestartCycle) {
+      el.btnPomoRestartCycle.addEventListener('click', () => {
+        sound.buttonClick();
+        resetPomodoro();
+        openPomodoroModal();
+        toast('Ready for your next study block! 🎯');
+      });
+    }
+
+    if (el.btnLockOpenTimer) {
+      el.btnLockOpenTimer.addEventListener('click', openPomodoroModal);
+    }
+    if (el.btnLockCancel) {
+      el.btnLockCancel.addEventListener('click', cancelPomodoroSession);
+    }
+
+    if (el.pomodoroModal) {
+      el.pomodoroModal.addEventListener('click', (e) => {
+        if (e.target === el.pomodoroModal) closePomodoroModal();
+      });
+    }
+
+    if (el.pomoTaskInput) {
+      el.pomoTaskInput.addEventListener('input', () => {
+        state.pomodoro.taskName = el.pomoTaskInput.value.trim();
+        savePomodoroState();
+      });
+    }
+
+    // Preset duration buttons
+    document.querySelectorAll('.pomo-preset-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        sound.buttonClick();
+        document.querySelectorAll('.pomo-preset-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const min = parseInt(btn.dataset.min, 10);
+        state.pomodoro.durationMinutes = min;
+        resetPomodoro();
+      });
+    });
+
+    // Reward selection buttons
+    document.querySelectorAll('.pomo-reward-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        sound.buttonClick();
+        document.querySelectorAll('.pomo-reward-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        state.pomodoro.rewardGamesTotal = parseInt(btn.dataset.games, 10);
+        savePomodoroState();
+        updatePomodoroUI();
+      });
     });
   }
 
-  if (el.btnLockOpenTimer) {
-    el.btnLockOpenTimer.addEventListener('click', openPomodoroModal);
-  }
-  if (el.btnLockCancel) {
-    el.btnLockCancel.addEventListener('click', cancelPomodoroSession);
-  }
-
-  if (el.pomodoroModal) {
-    el.pomodoroModal.addEventListener('click', (e) => {
-      if (e.target === el.pomodoroModal) closePomodoroModal();
-    });
-  }
-
-  if (el.pomoTaskInput) {
-    el.pomoTaskInput.addEventListener('input', () => {
-      state.pomodoro.taskName = el.pomoTaskInput.value.trim();
-      savePomodoroState();
-    });
-  }
-
-  // Preset duration buttons
-  document.querySelectorAll('.pomo-preset-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      sound.buttonClick();
-      document.querySelectorAll('.pomo-preset-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      const min = parseInt(btn.dataset.min, 10);
-      state.pomodoro.durationMinutes = min;
-      resetPomodoro();
-    });
-  });
-
-  // Reward selection buttons
-  document.querySelectorAll('.pomo-reward-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      sound.buttonClick();
-      document.querySelectorAll('.pomo-reward-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      state.pomodoro.rewardGamesTotal = parseInt(btn.dataset.games, 10);
-      savePomodoroState();
-      updatePomodoroUI();
-    });
-  });
-}
-
-// Initialize Pomodoro Study & Play mode
-initPomodoro();
+  // Initialize Pomodoro Study & Play mode
+  initPomodoro();
