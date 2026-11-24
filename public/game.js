@@ -2,11 +2,11 @@
    UNO — CLIENT-SIDE GAME LOGIC & SOUND ENGINE
    ================================================================ */
 const socket = io({
-  transports: ['websocket'],   // Skip polling → direct WebSocket for lower latency
-  upgrade: false,              // Don't fall back to polling
+  transports: ['websocket', 'polling'],  // Prefer WebSocket, fall back to polling
+  upgrade: true,
   reconnection: true,
-  reconnectionDelay: 500,
-  reconnectionAttempts: 10,
+  reconnectionDelay: 1000,
+  reconnectionAttempts: Infinity,
 });
 
 /* ── State ─────────────────────────────────────────────────────── */
@@ -20,7 +20,6 @@ const state = {
   totalGames: 0,
   soundEnabled: localStorage.getItem('uno_sound') !== 'false',
   wasMyTurn: false,
-  actionStack: [],       // stacked action messages above turn box (max 2-3)
   pomodoro: {
     active: false,
     mode: 'focus',       // 'focus' | 'break'
@@ -71,7 +70,6 @@ const el = {
   currentColor: $('current-color'),
   currentColorLabel: $('current-color-label'),
   gameMessage: $('game-message'),
-  actionMessageStack: $('action-message-stack'),
   dirIndicator: $('direction-indicator'),
   dirLabel: $('dir-label'),
 
@@ -610,12 +608,6 @@ function renderHand(gs) {
     el.myHand.appendChild(c);
   });
 
-  // Update hand badges
-  if (el.handCardCount) {
-    const count = gs.myCards.length;
-    el.handCardCount.textContent = `🃏 ${count} ${count === 1 ? 'Card' : 'Cards'}`;
-  }
-
   // Auto-scroll when new cards are drawn so player can see them immediately
   if (gs.myCards.length > prevCardCount && prevCardCount > 0) {
     setTimeout(() => {
@@ -765,10 +757,7 @@ function renderCatchBtns(gs) {
   randomizePosition(el.catchArea, 160, 50);
 }
 
-/* ── Game message & Action Stack (Fading stacked messages above turn box) ──── */
-let lastActionSig = null;
-let actionMsgId = 0;
-
+/* ── Game message ──── */
 function renderMessage(gs) {
   const a = gs.lastAction;
   if (!a) return;
@@ -790,55 +779,6 @@ function renderMessage(gs) {
   if (!text) return;
 
   if (el.gameMessage) el.gameMessage.textContent = text;
-
-  // Create unique signature to avoid duplicate pushes
-  const sig = `${a.type}:${a.playerName || ''}:${a.targetPlayer || ''}:${a.skippedPlayer || ''}:${a.chosenColor || ''}:${gs.drawPileCount}:${gs.currentPlayerIndex}:${gs.topCard?.id || ''}`;
-  if (sig === lastActionSig) return;
-  lastActionSig = sig;
-
-  // Add new message to stack
-  const id = ++actionMsgId;
-  state.actionStack.push({ id, text });
-
-  // Keep max 2-3 items in the stack (user specified max height 2 or 3)
-  while (state.actionStack.length > 3) {
-    state.actionStack.shift();
-  }
-
-  renderActionMessageStack();
-
-  // Expire message after 5 seconds so it gracefully fades away when game is idle
-  setTimeout(() => {
-    const idx = state.actionStack.findIndex(m => m.id === id);
-    if (idx !== -1) {
-      state.actionStack.splice(idx, 1);
-      renderActionMessageStack();
-    }
-  }, 5000);
-}
-
-function renderActionMessageStack() {
-  if (!el.actionMessageStack) return;
-  el.actionMessageStack.innerHTML = '';
-
-  const total = state.actionStack.length;
-  // Render in order: oldest at top (idx 0), newest at bottom (idx total - 1, closest to turn box)
-  state.actionStack.forEach((msg, idx) => {
-    const distFromNewest = (total - 1) - idx; // 0 = newest, 1 = 1 step older, 2 = oldest
-    const chip = document.createElement('div');
-    chip.className = 'action-msg-chip';
-
-    if (distFromNewest === 0) {
-      chip.classList.add('tier-active');
-    } else if (distFromNewest === 1) {
-      chip.classList.add('tier-faded');
-    } else {
-      chip.classList.add('tier-fading-out');
-    }
-
-    chip.textContent = msg.text;
-    el.actionMessageStack.appendChild(chip);
-  });
 }
 
 function capitalize(s) { return s ? s[0].toUpperCase() + s.slice(1) : ''; }
@@ -1126,9 +1066,6 @@ socket.on('player-left', ({ playerName, players }) => {
 // ── Game started ───────────────────────────────────────────────
 socket.on('game-started', (gs) => {
   if (gs.scoreboard) setScoreboard(gs.scoreboard, gs.totalGames);
-  state.actionStack = [];
-  lastActionSig = null;
-  renderActionMessageStack();
   showScreen('game');
   render(gs);
   toast('Game started! 🎴', 2500);
@@ -1178,10 +1115,31 @@ socket.on('kill-switch', () => {
   fleeHome();
 });
 
-// ── Errors ─────────────────────────────────────────────────────
+// ── Errors & Connection ───────────────────────────────────────
+socket.on('connect', () => {
+  // If we were in a room before disconnecting, automatically rejoin
+  if (state.roomCode && state.playerName) {
+    socket.emit('join-room', { roomCode: state.roomCode, playerName: state.playerName });
+  }
+});
+
 socket.on('error-msg', ({ message }) => toast(message));
 
-socket.on('disconnect', () => toast('Disconnected from server! 🔌', 5000));
+socket.on('disconnect', () => {
+  toast('Reconnecting to game server... 🔌', 2500);
+});
+
+socket.on('player-disconnected-temp', ({ playerName }) => {
+  if (playerName !== state.playerName) {
+    toast(`⚠️ ${playerName} connection dropped, waiting...`, 3000);
+  }
+});
+
+socket.on('player-reconnected', ({ playerName }) => {
+  if (playerName !== state.playerName) {
+    toast(`🎉 ${playerName} reconnected!`, 2500);
+  }
+});
 
 /* ================================================================
    POMODORO STUDY & PLAY CONTROLLER

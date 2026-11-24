@@ -167,7 +167,7 @@
         </div>
 
         <div class="hud-center">
-          <div id="game-message" class="game-message" style="display:none"></div>
+          <div id="game-message" class="game-message"></div>
         </div>
 
         <div class="hud-right"></div>
@@ -249,23 +249,13 @@
         <button class="reaction-btn" data-emoji="🤬" title="Abuse">🤬</button>
       </div>
 
-      <!-- Floating Turn Box & Action Messages Stack -->
+      <!-- Floating Turn Box -->
       <div class="turn-stack-container" id="turn-stack-container">
-        <!-- Fading Action Messages Stack (max 2-3 messages stacked above turn box) -->
-        <div id="action-message-stack" class="action-message-stack"></div>
-
-        <!-- Floating Player's Turn Box -->
         <div id="turn-indicator" class="turn-indicator"></div>
       </div>
 
       <!-- Bottom: player hand with HORIZONTAL SCROLL -->
       <div class="hand-area">
-        <div class="hand-header">
-          <div class="hand-info-left">
-            <span class="hand-count-badge" id="hand-card-count">🃏 0 Cards</span>
-          </div>
-        </div>
-
         <!-- Scrollable Hand Container with Prev/Next buttons and edge masks -->
         <div class="hand-scroll-wrapper" id="hand-scroll-wrapper">
           <button id="hand-scroll-prev" class="hand-scroll-btn scroll-prev" aria-label="Scroll hand left"

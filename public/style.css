@@ -1588,65 +1588,7 @@ input[type="text"]::placeholder {
   pointer-events: auto;
 }
 
-/* ── Action Message Stack (Fading & Stacked Upwards) ───────────── */
-.action-message-stack {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  width: 100%;
-}
-
-.action-msg-chip {
-  padding: 6px 18px;
-  background: rgba(15, 20, 38, 0.90);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border: 1px solid var(--border-bright);
-  border-radius: 20px;
-  font-size: 0.84rem;
-  font-weight: 700;
-  color: var(--text-primary);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
-  white-space: nowrap;
-  max-width: 85vw;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  animation: actionMsgIn 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
-  transition: opacity 0.35s ease, transform 0.35s ease, filter 0.35s ease;
-}
-
-/* Tiers: newest at bottom (just above turn box) is active, above ones fade */
-.action-msg-chip.tier-active {
-  opacity: 1;
-  transform: scale(1);
-  border-color: rgba(255, 255, 255, 0.28);
-}
-
-.action-msg-chip.tier-faded {
-  opacity: 0.62;
-  transform: scale(0.95);
-  filter: blur(0.2px);
-}
-
-.action-msg-chip.tier-fading-out {
-  opacity: 0.32;
-  transform: scale(0.88);
-  filter: blur(0.5px);
-}
-
-@keyframes actionMsgIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px) scale(0.92);
-  }
-
-  to {
-    transform: translateY(0) scale(1);
-  }
-}
-
-/* ── Turn Box (Floating directly below the action message stack) ─ */
+/* ── Turn Box ─ */
 .turn-indicator {
   position: relative;
   left: auto;
@@ -2409,11 +2351,6 @@ input[type="text"]::placeholder {
   .turn-indicator {
     font-size: 0.82rem;
     padding: 6px 18px;
-  }
-
-  .action-msg-chip {
-    font-size: 0.76rem;
-    padding: 5px 14px;
   }
 
   .btn-uno {
