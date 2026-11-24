@@ -60,387 +60,380 @@
       </div>
 
       <div class="glass-card" id="join-card">
-            <!-- Normal Join / Create Controls -->
-            <div id="join-normal-controls">
-              <div class="input-wrap">
-                <label for="player-name" class="input-label">YOUR NICKNAME</label>
-                <div class="input-field-inner">
-                  <span class="input-icon">👤</span>
-                  <input type="text" id="player-name" placeholder="Enter your name" maxlength="12" autocomplete="off"
-                    spellcheck="false">
-                </div>
-              </div>
-
-              <div class="button-group">
-                <button id="btn-create" class="btn btn-primary btn-glow">
-                  <span class="btn-text">Create New Room</span>
-                  <span class="btn-arrow">→</span>
-                </button>
-
-                <div class="divider"><span>OR ENTER A CODE</span></div>
-
-                    <div class="join-row">
-                      <div class="input-field-inner code-input-wrap">
-                        <span class="input-icon">🔑</span>
-                        <input type="text" id="room-code-input" placeholder="CODE" maxlength="4" autocomplete="off"
-                          spellcheck="false">
-                      </div>
-                      <button id="btn-join" class="btn btn-secondary">Join</button>
-                    </div>
-
-                    <button id="btn-join-pomo-banner" class="btn-pomo-banner" type="button">
-                      <span class="pomo-banner-icon">🍅</span>
-                      <span class="pomo-banner-title">Study & Play Pomodoro Mode</span>
-                      <span class="pomo-banner-badge">NEW</span>
-                    </button>
-                  </div>
-                </div>
-
-                <!-- Focus Lock Screen (Shown during active study session) -->
-                <div id="join-focus-lock" class="join-focus-lock" style="display:none">
-                  <div class="lock-shield-wrap">
-                    <div class="lock-shield-glow"></div>
-                    <div class="lock-shield-icon">🔒</div>
-                  </div>
-                  <div class="lock-badge">STUDY FOCUS IN PROGRESS</div>
-                  <h2 class="lock-title">Game is Locked</h2>
-                  <div class="lock-timer" id="lock-countdown">25:00</div>
-                  <div class="lock-task" id="lock-task-name">Deep study in progress...</div>
-                  <p class="lock-desc">Complete your study session to unlock reward UNO matches!</p>
-                  <div class="lock-actions">
-                    <button id="btn-lock-open-timer" class="btn btn-primary btn-glow">View Study Timer 🍅</button>
-                    <button id="btn-lock-cancel" class="btn-lock-cancel">End Session Early</button>
-                  </div>
-                </div>
-              </div>
-
-              <div class="join-hint">
-                <span>💡 Hint: Press <strong>K</strong> anytime for instant stealth blank</span>
-              </div>
-            </div>
-
-            <!-- floating ambient cards -->
-            <div class="ambient-cards" aria-hidden="true">
-              <div class="ambient-card ac-1"></div>
-              <div class="ambient-card ac-2"></div>
-              <div class="ambient-card ac-3"></div>
-              <div class="ambient-card ac-4"></div>
-              <div class="ambient-card ac-5"></div>
+        <!-- Normal Join / Create Controls -->
+        <div id="join-normal-controls">
+          <div class="input-wrap">
+            <label for="player-name" class="input-label">YOUR NICKNAME</label>
+            <div class="input-field-inner">
+              <span class="input-icon">👤</span>
+              <input type="text" id="player-name" placeholder="Enter your name" maxlength="12" autocomplete="off"
+                spellcheck="false">
             </div>
           </div>
 
-          <!-- ═══════════════ LOBBY SCREEN ═══════════════ -->
-          <div id="screen-lobby" class="screen">
-            <div class="lobby-container">
-              <div class="glass-card lobby-card">
-                <div class="lobby-header-badge">ROOM READY</div>
-                <p class="lobby-label">Room Code</p>
-                <div class="room-code-box">
-                  <h2 class="room-code-display" id="lobby-code">----</h2>
-                  <button id="btn-copy-code" class="btn-copy-code" title="Copy room code">
-                    <span id="copy-icon">📋</span>
-                    <span id="copy-text">Copy</span>
-                  </button>
-                </div>
-                <p class="lobby-subtitle">Share this 4-letter code with friends on your WiFi</p>
+          <div class="button-group">
+            <button id="btn-create" class="btn btn-primary btn-glow">
+              <span class="btn-text">Create New Room</span>
+              <span class="btn-arrow">→</span>
+            </button>
 
-                <div class="player-list-header">
-                  <span>Players in Room</span>
-                  <span class="player-count-chip" id="lobby-player-count">0</span>
-                </div>
-                <div id="player-list" class="player-list"></div>
+            <div class="divider"><span>OR ENTER A CODE</span></div>
 
-                <div id="lobby-scoreboard" class="scoreboard lobby-scoreboard" style="display:none">
-                  <p class="scoreboard-heading">Room Standings</p>
-                  <div id="lobby-scoreboard-list" class="scoreboard-list"></div>
-                </div>
-
-                <div class="lobby-actions" id="lobby-actions" style="display:none">
-                  <button id="btn-add-bot" class="btn btn-bot">
-                    <span class="bot-icon">🤖</span> Add Bot Player
-                  </button>
-                  <button id="btn-start" class="btn btn-primary btn-glow">
-                    Start Match 🎴
-                  </button>
-                </div>
-                <p id="lobby-status" class="lobby-status">Waiting for the host to start…</p>
+            <div class="join-row">
+              <div class="input-field-inner code-input-wrap">
+                <span class="input-icon">🔑</span>
+                <input type="text" id="room-code-input" placeholder="CODE" maxlength="4" autocomplete="off"
+                  spellcheck="false">
               </div>
+              <button id="btn-join" class="btn btn-secondary">Join</button>
             </div>
+
+            <button id="btn-join-pomo-banner" class="btn-pomo-banner" type="button">
+              <span class="pomo-banner-icon">🍅</span>
+              <span class="pomo-banner-title">Study & Play Pomodoro Mode</span>
+              <span class="pomo-banner-badge">NEW</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Focus Lock Screen (Shown during active study session) -->
+        <div id="join-focus-lock" class="join-focus-lock" style="display:none">
+          <div class="lock-shield-wrap">
+            <div class="lock-shield-glow"></div>
+            <div class="lock-shield-icon">🔒</div>
+          </div>
+          <div class="lock-badge">STUDY FOCUS IN PROGRESS</div>
+          <h2 class="lock-title">Game is Locked</h2>
+          <div class="lock-timer" id="lock-countdown">25:00</div>
+          <div class="lock-task" id="lock-task-name">Deep study in progress...</div>
+          <p class="lock-desc">Complete your study session to unlock reward UNO matches!</p>
+          <div class="lock-actions">
+            <button id="btn-lock-open-timer" class="btn btn-primary btn-glow">View Study Timer 🍅</button>
+            <button id="btn-lock-cancel" class="btn-lock-cancel">End Session Early</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="join-hint">
+        <span>💡 Hint: Press <strong>K</strong> anytime for instant stealth blank</span>
+      </div>
+    </div>
+
+    <!-- floating ambient cards -->
+    <div class="ambient-cards" aria-hidden="true">
+      <div class="ambient-card ac-1"></div>
+      <div class="ambient-card ac-2"></div>
+      <div class="ambient-card ac-3"></div>
+      <div class="ambient-card ac-4"></div>
+      <div class="ambient-card ac-5"></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ LOBBY SCREEN ═══════════════ -->
+  <div id="screen-lobby" class="screen">
+    <div class="lobby-container">
+      <div class="glass-card lobby-card">
+        <div class="lobby-header-badge">ROOM READY</div>
+        <p class="lobby-label">Room Code</p>
+        <div class="room-code-box">
+          <h2 class="room-code-display" id="lobby-code">----</h2>
+          <button id="btn-copy-code" class="btn-copy-code" title="Copy room code">
+            <span id="copy-icon">📋</span>
+            <span id="copy-text">Copy</span>
+          </button>
+        </div>
+        <p class="lobby-subtitle">Share this 4-letter code with friends on your WiFi</p>
+
+        <div class="player-list-header">
+          <span>Players in Room</span>
+          <span class="player-count-chip" id="lobby-player-count">0</span>
+        </div>
+        <div id="player-list" class="player-list"></div>
+
+        <div id="lobby-scoreboard" class="scoreboard lobby-scoreboard" style="display:none">
+          <p class="scoreboard-heading">Room Standings</p>
+          <div id="lobby-scoreboard-list" class="scoreboard-list"></div>
+        </div>
+
+        <div class="lobby-actions" id="lobby-actions" style="display:none">
+          <button id="btn-add-bot" class="btn btn-bot">
+            <span class="bot-icon">🤖</span> Add Bot Player
+          </button>
+          <button id="btn-start" class="btn btn-primary btn-glow">
+            Start Match 🎴
+          </button>
+        </div>
+        <p id="lobby-status" class="lobby-status">Waiting for the host to start…</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ GAME SCREEN ═══════════════ -->
+  <div id="screen-game" class="screen">
+    <div class="game-board" id="game-board">
+
+      <!-- Top HUD bar -->
+      <div class="game-hud">
+        <div class="hud-left">
+          <div class="room-badge">
+            <span class="room-badge-dot"></span>
+            <span class="room-badge-code" id="hud-room-code">UNO</span>
+          </div>
+          <!-- In-game scoreboard chip -->
+          <div id="game-scoreboard" class="game-scoreboard" style="display:none" title="Room standings">
+            <div class="game-scoreboard-label">WINS</div>
+            <div id="game-scoreboard-list" class="game-scoreboard-list"></div>
+          </div>
+        </div>
+
+        <div class="hud-center">
+          <div id="game-message" class="game-message"></div>
+        </div>
+
+        <div class="hud-right"></div>
+      </div>
+
+      <!-- Settings panel -->
+      <div id="settings-panel" class="settings-panel" style="display:none">
+        <div class="glass-card settings-card">
+          <h3 class="settings-title">Room Settings</h3>
+          <div class="setting-row">
+            <span class="setting-label">Card Suggestions</span>
+            <label class="toggle-switch">
+              <input type="checkbox" id="toggle-suggestions" checked>
+              <span class="toggle-track"></span>
+            </label>
+          </div>
+          <button class="btn btn-secondary btn-close-settings" id="btn-close-settings">Close</button>
+        </div>
+      </div>
+
+      <!-- Floating reactions layer (behind cards) -->
+      <div id="reaction-layer" class="reaction-layer" aria-hidden="true"></div>
+
+      <!-- Top: opponents pod list -->
+      <div id="opponents" class="opponents"></div>
+
+      <!-- Center Table Arena: piles + active color + direction -->
+      <div class="center-area">
+        <div class="table-felt-ring" aria-hidden="true"></div>
+
+        <div class="pile-area">
+          <!-- Draw Pile -->
+          <div id="draw-pile" class="card-pile draw-pile" role="button" tabindex="0" aria-label="Draw a card">
+            <div class="deck-shadow-layer layer-3"></div>
+            <div class="deck-shadow-layer layer-2"></div>
+            <div class="deck-shadow-layer layer-1"></div>
+            <div class="card card-back">
+              <span class="card-back-inner-glow"></span>
+              <span class="card-back-logo">UNO</span>
+            </div>
+            <span class="pile-label" id="draw-pile-label">DRAW</span>
           </div>
 
-          <!-- ═══════════════ GAME SCREEN ═══════════════ -->
-          <div id="screen-game" class="screen">
-            <div class="game-board" id="game-board">
-
-              <!-- Top HUD bar -->
-              <div class="game-hud">
-                <div class="hud-left">
-                  <div class="room-badge">
-                    <span class="room-badge-dot"></span>
-                    <span class="room-badge-code" id="hud-room-code">UNO</span>
-                  </div>
-                  <!-- In-game scoreboard chip -->
-                  <div id="game-scoreboard" class="game-scoreboard" style="display:none" title="Room standings">
-                    <div class="game-scoreboard-label">WINS</div>
-                    <div id="game-scoreboard-list" class="game-scoreboard-list"></div>
-                  </div>
-                </div>
-
-                <div class="hud-center">
-                  <div id="game-message" class="game-message"></div>
-                </div>
-
-                <div class="hud-right"></div>
-              </div>
-
-              <!-- Settings panel -->
-              <div id="settings-panel" class="settings-panel" style="display:none">
-                <div class="glass-card settings-card">
-                  <h3 class="settings-title">Room Settings</h3>
-                  <div class="setting-row">
-                    <span class="setting-label">Card Suggestions</span>
-                    <label class="toggle-switch">
-                      <input type="checkbox" id="toggle-suggestions" checked>
-                      <span class="toggle-track"></span>
-                    </label>
-                  </div>
-                  <button class="btn btn-secondary btn-close-settings" id="btn-close-settings">Close</button>
-                </div>
-              </div>
-
-              <!-- Floating reactions layer (behind cards) -->
-              <div id="reaction-layer" class="reaction-layer" aria-hidden="true"></div>
-
-              <!-- Top: opponents pod list -->
-              <div id="opponents" class="opponents"></div>
-
-              <!-- Center Table Arena: piles + active color + direction -->
-              <div class="center-area">
-                <div class="table-felt-ring" aria-hidden="true"></div>
-
-                <div class="pile-area">
-                  <!-- Draw Pile -->
-                  <div id="draw-pile" class="card-pile draw-pile" role="button" tabindex="0" aria-label="Draw a card">
-                    <div class="deck-shadow-layer layer-3"></div>
-                    <div class="deck-shadow-layer layer-2"></div>
-                    <div class="deck-shadow-layer layer-1"></div>
-                    <div class="card card-back">
-                      <span class="card-back-inner-glow"></span>
-                      <span class="card-back-logo">UNO</span>
-                    </div>
-                    <span class="pile-label" id="draw-pile-label">DRAW</span>
-                  </div>
-
-                  <!-- Active Color Beacon in center -->
-                  <div class="center-color-hub" title="Current Active Color">
-                    <div id="current-color" class="current-color-indicator"></div>
-                    <span class="current-color-label" id="current-color-label">COLOR</span>
-                  </div>
-
-                  <!-- Discard Pile -->
-                  <div class="discard-area">
-                    <div id="discard-pile" class="card-pile discard-pile"></div>
-                  </div>
-                </div>
-
-                <!-- Direction Orbit Indicator -->
-                <div class="direction-wrapper">
-                  <div id="direction-indicator" class="direction-indicator" title="Play Direction">
-                    <span class="dir-symbol">↻</span>
-                    <span class="dir-label" id="dir-label">Clockwise</span>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Floating UNO button -->
-              <button id="btn-uno" class="btn-uno" style="display:none">
-                <span class="uno-btn-text">UNO!</span>
-                <span class="uno-btn-ring"></span>
-              </button>
-
-              <!-- Catch area -->
-              <div id="catch-area" class="catch-area"></div>
-
-              <!-- Quick Reaction bar -->
-              <div id="reaction-bar" class="reaction-bar">
-                <button class="reaction-btn" data-emoji="😂" title="Laugh">😂</button>
-                <button class="reaction-btn" data-emoji="😡" title="Angry">😡</button>
-                <button class="reaction-btn" data-emoji="😢" title="Sad">😢</button>
-                <button class="reaction-btn" data-emoji="🤬" title="Abuse">🤬</button>
-              </div>
-
-              <!-- Floating Turn Box -->
-              <div class="turn-stack-container" id="turn-stack-container">
-                <div id="turn-indicator" class="turn-indicator"></div>
-              </div>
-
-              <!-- Bottom: player hand with HORIZONTAL SCROLL -->
-              <div class="hand-area">
-                <div class="hand-header">
-                  <div class="hand-info-left">
-                    <span class="hand-count-badge" id="hand-card-count">🃏 0 Cards</span>
-                  </div>
-                </div>
-
-                <!-- Scrollable Hand Container with Prev/Next buttons and edge masks -->
-                <div class="hand-scroll-wrapper" id="hand-scroll-wrapper">
-                  <button id="hand-scroll-prev" class="hand-scroll-btn scroll-prev" aria-label="Scroll hand left"
-                    title="Scroll left">‹</button>
-                  <div class="hand-scroll-mask mask-left" id="hand-mask-left"></div>
-
-                  <div id="my-hand" class="my-hand"></div>
-
-                  <div class="hand-scroll-mask mask-right" id="hand-mask-right"></div>
-                  <button id="hand-scroll-next" class="hand-scroll-btn scroll-next" aria-label="Scroll hand right"
-                    title="Scroll right">›</button>
-                </div>
-              </div>
-            </div>
-
-            <!-- Color picker modal -->
-            <div id="color-picker" class="color-picker-overlay" style="display:none">
-              <div class="color-picker-modal glass-card">
-                <div class="color-picker-badge">WILD CARD</div>
-                <h3>Choose Next Color</h3>
-                <p class="color-picker-sub">Select the color for following turns</p>
-                <div class="color-options">
-                  <button class="color-btn color-red" data-color="red" aria-label="Red">
-                    <span class="color-dot"></span>
-                    <span class="color-name">Red</span>
-                  </button>
-                  <button class="color-btn color-yellow" data-color="yellow" aria-label="Yellow">
-                    <span class="color-dot"></span>
-                    <span class="color-name">Yellow</span>
-                  </button>
-                  <button class="color-btn color-green" data-color="green" aria-label="Green">
-                    <span class="color-dot"></span>
-                    <span class="color-name">Green</span>
-                  </button>
-                  <button class="color-btn color-blue" data-color="blue" aria-label="Blue">
-                    <span class="color-dot"></span>
-                    <span class="color-name">Blue</span>
-                  </button>
-                </div>
-              </div>
-            </div>
+          <!-- Active Color Beacon in center -->
+          <div class="center-color-hub" title="Current Active Color">
+            <div id="current-color" class="current-color-indicator"></div>
+            <span class="current-color-label" id="current-color-label">COLOR</span>
           </div>
 
-          <!-- ═══════════════ GAME OVER SCREEN ═══════════════ -->
-          <div id="screen-gameover" class="screen">
-            <div class="gameover-container">
-              <div class="glass-card gameover-card">
-                <div class="confetti" aria-hidden="true" id="confetti"></div>
-                <div class="trophy-wrap">
-                  <div class="trophy-glow"></div>
-                  <div class="trophy">🏆</div>
-                </div>
-                <div class="winner-label">CHAMPION</div>
-                <h2 id="winner-name" class="winner-name"></h2>
-                <p class="winner-subtitle">dominated the match and won!</p>
-
-                <div class="scoreboard gameover-scoreboard">
-                  <p class="scoreboard-heading">Room Standings <span id="games-played-label"
-                      class="games-played"></span></p>
-                  <div id="gameover-scoreboard-list" class="scoreboard-list"></div>
-                </div>
-
-                <!-- Pomodoro Next Session Banner (shown when Pomodoro Mode active) -->
-                <div id="pomo-gameover-box" class="pomo-gameover-box" style="display:none">
-                  <div class="pomo-gameover-badge">🍅 STUDY CYCLE</div>
-                  <p id="pomo-gameover-status" class="pomo-gameover-status">Reward Match 1 of 1 Finished!</p>
-                  <button id="btn-pomo-restart-cycle" class="btn btn-pomo-restart">Start Next Study Session 🎯</button>
-                </div>
-
-                <div class="gameover-buttons">
-                  <button id="btn-play-again" class="btn btn-primary btn-glow">Play Next Round 🔄</button>
-                  <button id="btn-back-lobby" class="btn btn-secondary">Back to Menu</button>
-                </div>
-              </div>
-            </div>
+          <!-- Discard Pile -->
+          <div class="discard-area">
+            <div id="discard-pile" class="card-pile discard-pile"></div>
           </div>
+        </div>
 
-          <!-- ═══════════════ POMODORO STUDY & PLAY MODAL ═══════════════ -->
-          <div id="pomodoro-modal" class="pomodoro-overlay" style="display:none">
-            <div class="pomodoro-card glass-card">
-              <button id="btn-close-pomodoro" class="btn-close-pomo" title="Minimize Timer"
-                aria-label="Minimize">✕</button>
-
-              <div class="pomo-header">
-                <div class="pomo-badge" id="pomo-phase-badge">🍅 STUDY FOCUS</div>
-                <p class="pomo-sub" id="pomo-sub">Lock in and study for your goal. Earn UNO matches when done!</p>
-              </div>
-
-              <!-- Circular Glowing Timer Display -->
-              <div class="pomo-timer-circle-wrap">
-                <svg class="pomo-svg" viewBox="0 0 220 220">
-                  <defs>
-                    <linearGradient id="pomoGradFocus" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stop-color="#EF4444" />
-                      <stop offset="50%" stop-color="#F59E0B" />
-                      <stop offset="100%" stop-color="#8B5CF6" />
-                    </linearGradient>
-                    <linearGradient id="pomoGradBreak" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stop-color="#10B981" />
-                      <stop offset="100%" stop-color="#3B82F6" />
-                    </linearGradient>
-                  </defs>
-                  <circle class="pomo-circle-bg" cx="110" cy="110" r="95" />
-                  <circle class="pomo-circle-progress" id="pomo-circle-progress" cx="110" cy="110" r="95" />
-                </svg>
-
-                <div class="pomo-timer-content">
-                  <div class="pomo-time-display" id="pomo-time-display">25:00</div>
-                  <div class="pomo-status-label" id="pomo-status-label">READY TO STUDY</div>
-                </div>
-              </div>
-
-              <!-- Task Input -->
-              <div class="pomo-task-wrap">
-                <span class="pomo-task-icon">✍️</span>
-                <input type="text" id="pomo-task-input"
-                  placeholder="What are you studying? (e.g. Math, Coding, History)" maxlength="38" autocomplete="off">
-              </div>
-
-              <!-- Duration Presets -->
-              <div class="pomo-section">
-                <span class="pomo-section-label">STUDY DURATION</span>
-                <div class="pomo-presets">
-                  <button class="pomo-preset-btn" data-min="15">15 min</button>
-                  <button class="pomo-preset-btn active" data-min="25">25 min</button>
-                  <button class="pomo-preset-btn" data-min="45">45 min</button>
-                  <button class="pomo-preset-btn" data-min="60">60 min</button>
-                </div>
-              </div>
-
-              <!-- Reward Selection -->
-              <div class="pomo-section">
-                <span class="pomo-section-label">UNO REWARD AFTER FOCUS</span>
-                <div class="pomo-rewards">
-                  <button class="pomo-reward-btn active" data-games="1">🎮 1 UNO Match</button>
-                  <button class="pomo-reward-btn" data-games="2">🎮 2 UNO Matches</button>
-                </div>
-              </div>
-
-              <!-- Actions -->
-              <div class="pomo-actions">
-                <button id="btn-pomo-start" class="btn btn-primary btn-glow">
-                  <span id="pomo-start-text">Start Focus Session 🎯</span>
-                </button>
-                <button id="btn-pomo-reset" class="btn btn-secondary">Reset</button>
-              </div>
-
-              <!-- Motivational Quote -->
-              <div class="pomo-quote" id="pomo-quote">
-                "Focus for 25 minutes now. Celebrate your victory in UNO later! 🎴"
-              </div>
-            </div>
+        <!-- Direction Orbit Indicator -->
+        <div class="direction-wrapper">
+          <div id="direction-indicator" class="direction-indicator" title="Play Direction">
+            <span class="dir-symbol">↻</span>
+            <span class="dir-label" id="dir-label">Clockwise</span>
           </div>
+        </div>
+      </div>
 
-          <!-- Toast container -->
-          <div id="toast-container" class="toast-container"></div>
+      <!-- Floating UNO button -->
+      <button id="btn-uno" class="btn-uno" style="display:none">
+        <span class="uno-btn-text">UNO!</span>
+        <span class="uno-btn-ring"></span>
+      </button>
 
-          <script src="/socket.io/socket.io.js"></script>
-          <script src="game.js"></script>
+      <!-- Catch area -->
+      <div id="catch-area" class="catch-area"></div>
+
+      <!-- Quick Reaction bar -->
+      <div id="reaction-bar" class="reaction-bar">
+        <button class="reaction-btn" data-emoji="😂" title="Laugh">😂</button>
+        <button class="reaction-btn" data-emoji="😡" title="Angry">😡</button>
+        <button class="reaction-btn" data-emoji="😢" title="Sad">😢</button>
+        <button class="reaction-btn" data-emoji="🤬" title="Abuse">🤬</button>
+      </div>
+
+      <!-- Floating Turn Box -->
+      <div class="turn-stack-container" id="turn-stack-container">
+        <div id="turn-indicator" class="turn-indicator"></div>
+      </div>
+
+      <!-- Bottom: player hand with HORIZONTAL SCROLL -->
+      <div class="hand-area">
+
+        <!-- Scrollable Hand Container with Prev/Next buttons and edge masks -->
+        <div class="hand-scroll-wrapper" id="hand-scroll-wrapper">
+          <button id="hand-scroll-prev" class="hand-scroll-btn scroll-prev" aria-label="Scroll hand left"
+            title="Scroll left">‹</button>
+          <div class="hand-scroll-mask mask-left" id="hand-mask-left"></div>
+
+          <div id="my-hand" class="my-hand"></div>
+
+          <div class="hand-scroll-mask mask-right" id="hand-mask-right"></div>
+          <button id="hand-scroll-next" class="hand-scroll-btn scroll-next" aria-label="Scroll hand right"
+            title="Scroll right">›</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Color picker modal -->
+    <div id="color-picker" class="color-picker-overlay" style="display:none">
+      <div class="color-picker-modal glass-card">
+        <div class="color-picker-badge">WILD CARD</div>
+        <h3>Choose Next Color</h3>
+        <p class="color-picker-sub">Select the color for following turns</p>
+        <div class="color-options">
+          <button class="color-btn color-red" data-color="red" aria-label="Red">
+            <span class="color-dot"></span>
+            <span class="color-name">Red</span>
+          </button>
+          <button class="color-btn color-yellow" data-color="yellow" aria-label="Yellow">
+            <span class="color-dot"></span>
+            <span class="color-name">Yellow</span>
+          </button>
+          <button class="color-btn color-green" data-color="green" aria-label="Green">
+            <span class="color-dot"></span>
+            <span class="color-name">Green</span>
+          </button>
+          <button class="color-btn color-blue" data-color="blue" aria-label="Blue">
+            <span class="color-dot"></span>
+            <span class="color-name">Blue</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ GAME OVER SCREEN ═══════════════ -->
+  <div id="screen-gameover" class="screen">
+    <div class="gameover-container">
+      <div class="glass-card gameover-card">
+        <div class="confetti" aria-hidden="true" id="confetti"></div>
+        <div class="trophy-wrap">
+          <div class="trophy-glow"></div>
+          <div class="trophy">🏆</div>
+        </div>
+        <div class="winner-label">CHAMPION</div>
+        <h2 id="winner-name" class="winner-name"></h2>
+        <p class="winner-subtitle">dominated the match and won!</p>
+
+        <div class="scoreboard gameover-scoreboard">
+          <p class="scoreboard-heading">Room Standings <span id="games-played-label" class="games-played"></span></p>
+          <div id="gameover-scoreboard-list" class="scoreboard-list"></div>
+        </div>
+
+        <!-- Pomodoro Next Session Banner (shown when Pomodoro Mode active) -->
+        <div id="pomo-gameover-box" class="pomo-gameover-box" style="display:none">
+          <div class="pomo-gameover-badge">🍅 STUDY CYCLE</div>
+          <p id="pomo-gameover-status" class="pomo-gameover-status">Reward Match 1 of 1 Finished!</p>
+          <button id="btn-pomo-restart-cycle" class="btn btn-pomo-restart">Start Next Study Session 🎯</button>
+        </div>
+
+        <div class="gameover-buttons">
+          <button id="btn-play-again" class="btn btn-primary btn-glow">Play Next Round 🔄</button>
+          <button id="btn-back-lobby" class="btn btn-secondary">Back to Menu</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ POMODORO STUDY & PLAY MODAL ═══════════════ -->
+  <div id="pomodoro-modal" class="pomodoro-overlay" style="display:none">
+    <div class="pomodoro-card glass-card">
+      <button id="btn-close-pomodoro" class="btn-close-pomo" title="Minimize Timer" aria-label="Minimize">✕</button>
+
+      <div class="pomo-header">
+        <div class="pomo-badge" id="pomo-phase-badge">🍅 STUDY FOCUS</div>
+        <p class="pomo-sub" id="pomo-sub">Lock in and study for your goal. Earn UNO matches when done!</p>
+      </div>
+
+      <!-- Circular Glowing Timer Display -->
+      <div class="pomo-timer-circle-wrap">
+        <svg class="pomo-svg" viewBox="0 0 220 220">
+          <defs>
+            <linearGradient id="pomoGradFocus" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#EF4444" />
+              <stop offset="50%" stop-color="#F59E0B" />
+              <stop offset="100%" stop-color="#8B5CF6" />
+            </linearGradient>
+            <linearGradient id="pomoGradBreak" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#10B981" />
+              <stop offset="100%" stop-color="#3B82F6" />
+            </linearGradient>
+          </defs>
+          <circle class="pomo-circle-bg" cx="110" cy="110" r="95" />
+          <circle class="pomo-circle-progress" id="pomo-circle-progress" cx="110" cy="110" r="95" />
+        </svg>
+
+        <div class="pomo-timer-content">
+          <div class="pomo-time-display" id="pomo-time-display">25:00</div>
+          <div class="pomo-status-label" id="pomo-status-label">READY TO STUDY</div>
+        </div>
+      </div>
+
+      <!-- Task Input -->
+      <div class="pomo-task-wrap">
+        <span class="pomo-task-icon">✍️</span>
+        <input type="text" id="pomo-task-input" placeholder="What are you studying? (e.g. Math, Coding, History)"
+          maxlength="38" autocomplete="off">
+      </div>
+
+      <!-- Duration Presets -->
+      <div class="pomo-section">
+        <span class="pomo-section-label">STUDY DURATION</span>
+        <div class="pomo-presets">
+          <button class="pomo-preset-btn" data-min="15">15 min</button>
+          <button class="pomo-preset-btn active" data-min="25">25 min</button>
+          <button class="pomo-preset-btn" data-min="45">45 min</button>
+          <button class="pomo-preset-btn" data-min="60">60 min</button>
+        </div>
+      </div>
+
+      <!-- Reward Selection -->
+      <div class="pomo-section">
+        <span class="pomo-section-label">UNO REWARD AFTER FOCUS</span>
+        <div class="pomo-rewards">
+          <button class="pomo-reward-btn active" data-games="1">🎮 1 UNO Match</button>
+          <button class="pomo-reward-btn" data-games="2">🎮 2 UNO Matches</button>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="pomo-actions">
+        <button id="btn-pomo-start" class="btn btn-primary btn-glow">
+          <span id="pomo-start-text">Start Focus Session 🎯</span>
+        </button>
+        <button id="btn-pomo-reset" class="btn btn-secondary">Reset</button>
+      </div>
+
+      <!-- Motivational Quote -->
+      <div class="pomo-quote" id="pomo-quote">
+        "Focus for 25 minutes now. Celebrate your victory in UNO later! 🎴"
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="game.js"></script>
 </body>
 
 </html>
